@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - uses: astral-sh/setup-uv@v10.3.2
+        with:
+          enable-cache: false  # the lock lives in hermes-src, not here
+
+      - name: Tag matches plugin.yaml
+        run: |
+          python - <<'PY'
+          import os
+          import pathlib
+          import re
+          import sys
+
+          tag = os.environ["GITHUB_REF_NAME"]
+          expected = tag[1:] if tag.startswith("v") else tag
+          text = pathlib.Path("plugin.yaml").read_text()
+          version = re.search(r"^version:\s*(\S+)", text, re.MULTILINE).group(1)
+          if version != expected:
+              sys.exit(f"plugin.yaml version {version} does not match tag {tag}")
+          print(f"version {version} matches {tag}")
+          PY
+
+      - name: Install Hermes
+        run: |
+          git clone --depth 1 https://github.com/NousResearch/hermes-agent.git hermes-src
+          uv sync --frozen --no-dev --project hermes-src
+
+      - name: Run the suite
+        run: uv run --project hermes-src --no-sync python -m unittest discover -s tests
+
+      - name: Package the plugin
+        run: |
+          mkdir -p dist
+          git archive --format=zip --prefix=mqtt/ -o "dist/mqtt-${GITHUB_REF_NAME}.zip" HEAD
+
+# github.token is a runner-provided secret passed through env, never interpolated into run:
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "dist/mqtt-${GITHUB_REF_NAME}.zip" \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes

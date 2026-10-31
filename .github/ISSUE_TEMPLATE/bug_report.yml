@@ -1,0 +1,106 @@
+name: Bug report
+description: Something is broken — wrong routing, a dropped event, an error, a failed install, or Hermes won't load the plugin.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please check these first:
+
+        - [ ] I searched [existing issues](https://github.com/JasonSwindle/hermes-mqtt/issues) for a duplicate
+        - [ ] I restarted the gateway after installing/enabling the plugin (platform registration happens at startup)
+        - [ ] I redacted my broker password. **Never paste it** — write `***` instead
+
+        Security problems do **not** belong here; see the security policy link on the new-issue page.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What's broken
+      description: A clear description, including any error text or unexpected result.
+      placeholder: |
+        What happened, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: The smallest sequence that shows the problem.
+      placeholder: |
+        1. Route `events/sensors.` to `deliver` on `local`
+        2. Publish one envelope to `events/sensors.temp`
+        3. Nothing arrives, and the log shows ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      placeholder: The message should have been delivered to the local platform.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      description: "Version from plugin.yaml, or the commit sha for a catalog install (hermes plugins info mqtt)."
+      placeholder: "1.0.0 / a1b2c3d"
+    validations:
+      required: true
+
+  - type: input
+    id: hermes
+    attributes:
+      label: Hermes version
+      description: Output of `hermes --version`.
+      placeholder: "v0.22.5"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: broker
+    attributes:
+      label: Broker
+      options:
+        - Mosquitto
+        - EMQX
+        - HiveMQ
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: protocol
+    attributes:
+      label: Protocol
+      description: What `protocol:` is set to, and what the log says was negotiated.
+      options:
+        - "auto → 5.0"
+        - "auto → 3.1.1"
+        - "pinned 5.0"
+        - "pinned 3.1.1"
+        - "not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log lines
+      description: Gateway log around the failure, with credentials replaced by `***`.
+      render: text
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I removed broker credentials from everything pasted above
+          required: true
+        - label: This is not a Hermes core bug (those go to NousResearch/hermes-agent)
+          required: true

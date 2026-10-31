@@ -1,0 +1,75 @@
+name: Feature request
+description: Suggest different behaviour, a new option, or a change to a default.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: the README covers the existing knobs (modes, prefix keys,
+        templates, `max_concurrent`, `protocol`), and
+        [AGENTS.md](https://github.com/JasonSwindle/hermes-mqtt/blob/main/AGENTS.md)
+        lists the invariants a change must not break — stdlib only, unmatched topics
+        drop, the own-topic guard, QoS 0–1 without TLS or will.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's the problem?
+      description: Describe the friction, not the solution — what are you trying to do that's awkward or impossible today?
+      placeholder: A slow consumer reconnects and replays the last minute of events.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What would you like to happen instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches, broker-side options, or workarounds that might cover it.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Routing or matching
+        - A mode (deliver / agent / job / drop)
+        - Templates
+        - Reconnect or backpressure
+        - Protocol support
+        - Configuration
+        - Documentation
+        - Tests or CI
+        - Catalog packaging
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dependency
+    attributes:
+      label: Would this require a new runtime dependency?
+      description: The plugin ships with zero dependencies; a proposal that needs one has a much higher bar.
+      options:
+        - "No"
+        - "Yes — and that is part of the point"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I understand the invariants in AGENTS.md must keep holding (a change that breaks one needs to say so explicitly)
+          required: true

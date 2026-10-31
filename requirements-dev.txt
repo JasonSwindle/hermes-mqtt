@@ -1,0 +1,18 @@
+# Runtime dependencies: none. mqtt_client.py and mqtt_codec.py are standard library
+# only, and the manifest declares no Python packages.
+#
+# The tests and `hermes plugins validate` import the Hermes Agent package, which has to
+# come from a checkout: upstream refuses a wheel build ("Building wheels or sdists for
+# hermes-agent is not supported"), so `pip install hermes-agent` cannot work at all.
+# Install it editable with uv:
+#
+#   git clone --depth 1 https://github.com/NousResearch/hermes-agent.git
+#   uv venv .venv-dev
+#   uv pip install -e ./hermes-agent
+#
+# …or, for the exact dependency set the tests are proven against, sync its lock:
+#
+#   uv sync --frozen --no-dev --project ./hermes-agent
+#   uv run --project ./hermes-agent --no-sync python -m unittest discover -s tests
+#
+# No third-party dev dependency is required beyond Hermes itself.

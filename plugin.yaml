@@ -1,0 +1,58 @@
+name: mqtt
+version: 0.7.0
+requires_hermes: ">=0.22.3,<0.23"
+description: "MQTT as a Hermes platform: connects to an authenticated broker as its own user, subscribes to a topic filter, and routes each message by a per-topic policy — deliver pushes text to another platform for free, agent starts a turn, job fires an existing cron job, drop ignores it. Agent and job policies can opt into burst coalescing (coalesce seconds / coalesce_max) so one burst that arrives within a window becomes one action instead of one per message; opt-in, per policy, and off by default. Unmatched topics are dropped rather than escalated, and replies publish outside the consumed namespace so they can never be re-consumed. The MQTT 3.1.1 and 5.0 client ships in the plugin over TCP or TLS (mqtts:// with certificate/hostname verification, a private CA, optional mutual TLS; QoS 0-1, keepalive, reconnect, v5 reason codes and broker limits), so there is nothing to install and nothing to lose when an image update replaces the venv. Community plugin, not affiliated with OASIS or any broker vendor."
+author: Jason Swindle
+license: MIT
+homepage: https://github.com/JasonSwindle/hermes-mqtt
+kind: platform
+requires_env:
+  - name: MQTT_HERMES_URL
+    description: "Broker URL (e.g. tcp://mqtt.example.com:1883 or mqtts://mqtt.example.com:8883)"
+    prompt: "MQTT broker url"
+    secret: false
+  - name: MQTT_HERMES_PASSWORD
+    description: "Password for the broker user named in MQTT_HERMES_USER"
+    prompt: "MQTT password"
+    secret: true
+optional_env:
+  - name: MQTT_HERMES_USER
+    description: "Broker username (default: hermes)"
+    prompt: "MQTT user (default hermes)"
+    secret: false
+  - name: MQTT_SUBSCRIBE
+    description: "Topic filter to subscribe to (default: events/#)"
+    prompt: "MQTT topic filter (default events/#)"
+    secret: false
+  - name: MQTT_HERMES_PROTOCOL
+    description: "Protocol negotiation: auto (try 5, fall back to 3.1.1), 5, or 3.1.1 (default: auto)"
+    prompt: "MQTT protocol (default auto)"
+    secret: false
+  - name: MQTT_PUBLISH_TOPIC
+    description: "Topic replies are published to (default: hermes/out)"
+    prompt: "MQTT publish topic (default hermes/out)"
+    secret: false
+  - name: MQTT_HERMES_TLS_CA_FILE
+    description: "CA bundle (PEM) for a private broker CA; omit to use the system trust store"
+    prompt: "MQTT TLS CA file (optional)"
+    secret: false
+  - name: MQTT_HERMES_TLS_CERT_FILE
+    description: "Client certificate (PEM) for mutual TLS; requires MQTT_HERMES_TLS_KEY_FILE"
+    prompt: "MQTT TLS client certificate (optional)"
+    secret: false
+  - name: MQTT_HERMES_TLS_KEY_FILE
+    description: "Client private key (PEM) for mutual TLS; requires MQTT_HERMES_TLS_CERT_FILE"
+    prompt: "MQTT TLS client key (optional)"
+    secret: false
+  - name: MQTT_HERMES_TLS_KEY_PASSWORD
+    description: "Password for an encrypted MQTT TLS client key"
+    prompt: "MQTT TLS client key password (optional)"
+    secret: true
+  - name: MQTT_HERMES_TLS_SERVER_NAME
+    description: "Certificate name / SNI override when the URL host is an IP or proxy alias"
+    prompt: "MQTT TLS server name (optional)"
+    secret: false
+  - name: MQTT_HERMES_TLS_INSECURE
+    description: "UNSAFE: disable TLS certificate verification (last-resort lab option)"
+    prompt: "MQTT TLS insecure (default false)"
+    secret: false

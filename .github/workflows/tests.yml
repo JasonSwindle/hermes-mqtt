@@ -1,0 +1,50 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: ${{ matrix.os }} · py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3-OS matrix on purpose: the suite drives real loopback sockets and an asyncio
+        # pump, and this is the only place that portability claim is tested rather than
+        # reasoned. One Python, 3.14: the plugin itself is 3.11-clean, but the tests
+        # import Hermes, and Hermes pins its runtime dependencies for 3.14 only — on
+        # 3.13 `pip install -e` pulls almost nothing and `import gateway` dies on ruamel.
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.14"]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: astral-sh/setup-uv@v10.3.2
+        with:
+          enable-cache: false  # the lock lives in hermes-src, not here
+
+      # The plugin has no runtime dependencies, but the tests import the gateway package,
+      # so Hermes itself is the one install. uv, not pip: hermes pins Pillow==13 on 3.14
+      # while browser-harness pins pillow==12.3.0, and only the project's own
+      # [tool.uv] override-dependencies (baked into uv.lock) resolves that. pip dies with
+      # ResolutionImpossible; `uv sync --frozen` installs exactly the lock.
+      - name: Install Hermes Agent (uv --frozen — pip cannot resolve its overrides)
+        run: |
+          git clone --depth 1 https://github.com/NousResearch/hermes-agent.git hermes-src
+          uv sync --frozen --no-dev --project hermes-src
+
+      - name: Tests
+        run: uv run --project hermes-src --no-sync python -m unittest discover -s tests
+
+  # Plugin validation is NOT duplicated here: the catalog runs `hermes plugins validate`
+  # at the pinned commit during admission, which needs a full Hermes install. Run it
+  # locally before opening a catalog PR:
+  #   hermes plugins validate .
