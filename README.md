@@ -63,19 +63,15 @@ but the point is the topology: Hermes on the bus, not a bridge daemon per produc
 
 ## Install
 
-**From the plugin catalog** — find it with `hermes plugins search mqtt`:
-
-```bash
-hermes plugins install mqtt --enable
-```
-
-**Straight from this repository** (add `--ref <40-character sha>` to pin a reviewed commit):
+The plugin is **not yet in the Hermes plugin catalog**, so `hermes plugins search mqtt`
+will not find it. Install straight from this repository (add `--ref <40-character sha>`
+to pin a reviewed commit):
 
 ```bash
 hermes plugins install JasonSwindle/hermes-mqtt --enable
 ```
 
-A git or catalog install lands as a **top-level plugin**, so it is enabled under the
+A repository install lands as a **top-level plugin**, so it is enabled under the
 plugin name `mqtt`. A manual clone behaves the same if you clone to
 `~/.hermes/plugins/mqtt`; cloning under `plugins/platforms/` instead means the enable key
 is `platforms/mqtt`.
