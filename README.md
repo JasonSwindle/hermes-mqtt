@@ -5,6 +5,7 @@
 [![tests](https://github.com/JasonSwindle/hermes-mqtt/actions/workflows/tests.yml/badge.svg)](https://github.com/JasonSwindle/hermes-mqtt/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Hermes Agent plugin](https://img.shields.io/badge/Hermes-Agent%20plugin-8A63D2.svg)](https://github.com/NousResearch/hermes-agent)
+[![Hermes plugin catalog](https://img.shields.io/badge/Hermes-plugin%20catalog-8A63D2.svg)](https://hermes-agent.nousresearch.com/docs/plugins/mqtt)
 
 Connects [Hermes Agent](https://hermes-agent.nousresearch.com/docs) to an MQTT broker as
 a first-class platform: one subscription, a per-topic policy, and a reply topic. The
@@ -26,6 +27,7 @@ TLS — so an image update that replaces the venv cannot take it away.
 | | |
 |---|---|
 | Plugin name | `mqtt` |
+| Catalog | [listed](https://hermes-agent.nousresearch.com/docs/plugins/mqtt) — `hermes plugins install mqtt` |
 | Registered platform | `mqtt` — the key under `platforms:` |
 | Kind | `platform` — one gateway adapter: no tools, no hooks |
 | Dependencies | none — standard library only |
@@ -63,16 +65,24 @@ but the point is the topology: Hermes on the bus, not a bridge daemon per produc
 
 ## Install
 
-The plugin is **not yet in the Hermes plugin catalog**, so `hermes plugins search mqtt`
-will not find it. Install straight from this repository (add `--ref <40-character sha>`
-to pin a reviewed commit):
+**From the plugin catalog** — the plugin is listed as
+[`mqtt`](https://hermes-agent.nousresearch.com/docs/plugins/mqtt) in the Hermes plugin
+catalog; find it with `hermes plugins search mqtt`. A catalog install checks out the
+reviewed commit the listing pins:
+
+```bash
+hermes plugins install mqtt --enable
+```
+
+**Straight from this repository** — tracks `main`; add `--ref <40-character sha>` to pin
+a reviewed commit instead:
 
 ```bash
 hermes plugins install JasonSwindle/hermes-mqtt --enable
 ```
 
-A repository install lands as a **top-level plugin**, so it is enabled under the
-plugin name `mqtt`. A manual clone behaves the same if you clone to
+A catalog or repository install lands as a **top-level plugin**, so it is enabled under
+the plugin name `mqtt`. A manual clone behaves the same if you clone to
 `~/.hermes/plugins/mqtt`; cloning under `plugins/platforms/` instead means the enable key
 is `platforms/mqtt`.
 
