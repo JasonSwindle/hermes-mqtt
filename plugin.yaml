@@ -1,6 +1,8 @@
 name: mqtt
-version: 0.7.0
-requires_hermes: ">=0.22.3,<0.23"
+version: 0.7.1
+# A floor, never a ceiling: Hermes skips the whole plugin when this rejects the running
+# version, so an upper bound turns every Hermes minor release into an outage.
+requires_hermes: ">=0.22.3"
 description: "MQTT as a Hermes platform: connects to an authenticated broker as its own user, subscribes to a topic filter, and routes each message by a per-topic policy — deliver pushes text to another platform for free, agent starts a turn, job fires an existing cron job, drop ignores it. Agent and job policies can opt into burst coalescing (coalesce seconds / coalesce_max) so one burst that arrives within a window becomes one action instead of one per message; opt-in, per policy, and off by default. Unmatched topics are dropped rather than escalated, and replies publish outside the consumed namespace so they can never be re-consumed. The MQTT 3.1.1 and 5.0 client ships in the plugin over TCP or TLS (mqtts:// with certificate/hostname verification, a private CA, optional mutual TLS; QoS 0-1, keepalive, reconnect, v5 reason codes and broker limits), so there is nothing to install and nothing to lose when an image update replaces the venv. Community plugin, not affiliated with OASIS or any broker vendor."
 author: Jason Swindle
 license: MIT
