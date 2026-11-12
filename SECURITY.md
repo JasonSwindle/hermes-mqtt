@@ -14,11 +14,13 @@ Expect an acknowledgement within a few days; this is a single-maintainer, commun
 
 ## Supported versions
 
-Fixes land on the latest 0.6.x release. The manifest declares
-`requires_hermes: ">=0.22.3,<0.23"`: the upper bound says only that minor line has been
-tested, and the lower bound is the oldest host the plugin claims to load on (its declared
-seams exist in the tested v0.22.5; 0.22.3 itself was not independently exercised here).
-Older or newer hosts refuse to load it rather than failing at registration.
+Fixes land on the latest release. The manifest declares
+`requires_hermes: ">=0.22.3"` — a floor, not a ceiling: the oldest host the plugin claims
+to load on. Its declared seams were exercised on v0.22.5 and v0.23.1 (0.22.3 itself was
+not independently exercised here). A newer Hermes is attempted rather than refused up
+front; a missing optional seam (job mode, cross-platform delivery) is detected per event
+and reported without taking the adapter down. A host below the floor is skipped by the
+loader rather than failing at registration.
 
 ## Scope
 

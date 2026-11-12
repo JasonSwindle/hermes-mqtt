@@ -77,7 +77,7 @@ normal-disconnect packet (v5 §4.13.1 SHOULD-level reason codes are not sent).
 
 ## Verified by
 
-`python -m unittest discover -s tests` — 222 tests: byte-level codec assertions for both
+`python -m unittest discover -s tests` — 223 tests: byte-level codec assertions for both
 dialects, a fake broker that re-implements framing independently, wire end-to-end tests for
 the router, coalescing tests for the per-prefix buckets, flush triggers and batch
 rendering/truncation, TLS tests against a real loopback TLS listener using committed

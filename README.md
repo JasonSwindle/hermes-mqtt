@@ -30,10 +30,11 @@ TLS — so an image update that replaces the venv cannot take it away.
 | Catalog | [listed](https://hermes-agent.nousresearch.com/docs/plugins/mqtt) — `hermes plugins install mqtt` |
 | Registered platform | `mqtt` — the key under `platforms:` |
 | Kind | `platform` — one gateway adapter: no tools, no hooks |
+| Hermes Agent | 0.22.3 or newer (`requires_hermes` floor) |
 | Dependencies | none — standard library only |
 | Protocols | MQTT 3.1.1 (level 4) and 5.0 (level 5), QoS 0–1 |
 | Transport | TCP, or TLS (`mqtts://`, TLS 1.2+) with system/custom CA verification and optional mTLS |
-| Tests | 222 stdlib unit tests, offline against a fake broker |
+| Tests | 223 stdlib unit tests, offline against a fake broker |
 | Platforms | Linux, macOS (Apple Silicon) and Windows, Python 3.14 |
 | Licence | MIT |
 | Affiliation | Community plugin by Jason Swindle. Not affiliated with OASIS, Mosquitto, EMQX, HiveMQ or any broker vendor. |
@@ -379,16 +380,18 @@ PYTHONPATH=/path/to/hermes:/path/to/hermes/.venv/lib/python3.14/site-packages \
   python -m unittest discover -s tests -v
 ```
 
-Expected: `Ran 222 tests … OK`. Nineteen are the coalescing suite
+Expected: `Ran 223 tests … OK`. Nineteen are the coalescing suite
 (`tests/test_coalesce.py`): per-prefix buckets, the flush triggers, batch rendering and
 truncation, the counter semantics, and the disabled-by-default, `deliver` pass-through,
 invalid-value clamping and 256-bucket-bound cases. Three are wire end-to-end tests
 (`tests/test_e2e.py`): a fake broker on a loopback socket feeds a real `MqttSession` and the
 real router, with only the far-side delivery stubbed. The fake broker re-implements framing
-independently, so an encoder bug cannot be mirrored by its own test. CI runs the suite on
-Linux, macOS and Windows against Python 3.14 — Hermes's own dependency set is 3.14-only, and
-the tests import it. macOS coverage is Apple Silicon only (`macos-latest` is arm64); **Intel
-Macs are not tested and are not supported.**
+independently, so an encoder bug cannot be mirrored by its own test. One checks that
+`plugin.yaml` keeps `requires_hermes` a floor rather than a ceiling
+(`tests/test_manifest.py`). CI runs the suite on Linux, macOS and Windows against Python
+3.14 — Hermes's own dependency set is 3.14-only, and the tests import it. macOS coverage is
+Apple Silicon only (`macos-latest` is arm64); **Intel Macs are not tested and are not
+supported.**
 
 There is also a check CI cannot run, because it needs a broker and credentials:
 
